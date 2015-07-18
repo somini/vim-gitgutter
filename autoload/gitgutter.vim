@@ -215,3 +215,52 @@ function! gitgutter#preview_hunk()
 endfunction
 
 " }}}
+
+" Cached {{{
+function! gitgutter#cached_enable()
+
+  " Don't clobber the saved value
+  if !g:gitgutter_cached
+    let g:gitgutter_diff_args_original = g:gitgutter_diff_args
+    " Signs
+    let g:gitgutter_sign_added_original = g:gitgutter_sign_added
+    let g:gitgutter_sign_modified_original = g:gitgutter_sign_modified
+    let g:gitgutter_sign_removed_original = g:gitgutter_sign_removed
+  endif
+
+  let g:gitgutter_diff_args = g:gitgutter_diff_args_cached
+  " Signs
+  let g:gitgutter_sign_added = g:gitgutter_sign_cached_added
+  let g:gitgutter_sign_modified = g:gitgutter_sign_cached_modified
+  let g:gitgutter_sign_removed = g:gitgutter_sign_cached_removed
+
+  let g:gitgutter_cached = 1
+  call gitgutter#highlight#define_signs()
+
+  call gitgutter#all()
+endfunction
+
+function! gitgutter#cached_disable()
+
+  if g:gitgutter_cached
+    let g:gitgutter_diff_args = g:gitgutter_diff_args_original
+    " Signs
+    let g:gitgutter_sign_added = g:gitgutter_sign_added_original
+    let g:gitgutter_sign_modified = g:gitgutter_sign_modified_original
+    let g:gitgutter_sign_removed = g:gitgutter_sign_removed_original
+  endif
+
+  let g:gitgutter_cached = 0
+  call gitgutter#highlight#define_signs()
+
+  call gitgutter#all()
+endfunction
+
+function! gitgutter#cached_toggle()
+  if g:gitgutter_cached
+    call gitgutter#cached_disable()
+  else
+    call gitgutter#cached_enable()
+  endif
+endfunction
+" }}}

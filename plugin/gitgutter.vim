@@ -44,11 +44,16 @@ catch /E239/
   let g:gitgutter_sign_removed_first_line = '_^'
 endtry
 
-call s:set('g:gitgutter_sign_modified_removed',    '~_')
-call s:set('g:gitgutter_diff_args',                  '')
-call s:set('g:gitgutter_escape_grep',                 0)
-call s:set('g:gitgutter_map_keys',                    1)
-call s:set('g:gitgutter_avoid_cmd_prompt_on_windows', 1)
+call s:set('g:gitgutter_sign_modified_removed',      '~_')
+call s:set('g:gitgutter_diff_args',                    '')
+call s:set('g:gitgutter_escape_grep',                   0)
+call s:set('g:gitgutter_map_keys',                      1)
+call s:set('g:gitgutter_avoid_cmd_prompt_on_windows',   1)
+call s:set('g:gitgutter_cached',                        0)
+call s:set('g:gitgutter_diff_args_cached', ' -M --cached')
+call s:set('g:gitgutter_sign_cached_added',           'A')
+call s:set('g:gitgutter_sign_cached_modified',        'M')
+call s:set('g:gitgutter_sign_cached_removed',         'R')
 
 call gitgutter#highlight#define_sign_column_highlight()
 call gitgutter#highlight#define_highlights()
@@ -122,6 +127,14 @@ endfunction
 
 " }}}
 
+" Cached {{{
+
+command GitGutterCachedDisable call gitgutter#cached_disable()
+command GitGutterCachedEnable call gitgutter#cached_enable()
+command GitGutterCachedToggle  call gitgutter#cached_toggle()
+
+" }}}
+
 command -bar GitGutterDebug call gitgutter#debug#debug()
 
 " Maps {{{
@@ -142,6 +155,7 @@ endif
 nnoremap <silent> <Plug>GitGutterStageHunk   :GitGutterStageHunk<CR>
 nnoremap <silent> <Plug>GitGutterRevertHunk  :GitGutterRevertHunk<CR>
 nnoremap <silent> <Plug>GitGutterPreviewHunk :GitGutterPreviewHunk<CR>
+nnoremap <silent> <Plug>GitGutterCachedToggle :GitGutterCachedToggle<CR>
 
 if g:gitgutter_map_keys
   if !hasmapto('<Plug>GitGutterStageHunk') && maparg('<Leader>hs', 'n') ==# ''
@@ -152,6 +166,9 @@ if g:gitgutter_map_keys
   endif
   if !hasmapto('<Plug>GitGutterPreviewHunk') && maparg('<Leader>hp', 'n') ==# ''
     nmap <Leader>hp <Plug>GitGutterPreviewHunk
+  endif
+  if !hasmapto('<Plug>GitGutterCachedToggle') && maparg('<Leader>hc', 'n') ==# ''
+    nmap <Leader>hc <Plug>GitGutterCachedToggle
   endif
 endif
 
